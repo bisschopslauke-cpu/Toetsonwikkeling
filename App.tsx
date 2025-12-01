@@ -1,52 +1,71 @@
-import React from 'react';
 
-function App() {
+import React, { useState } from 'react';
+import { Navbar } from './components/Navbar';
+import { GeneratorPage } from './pages/Generator';
+import { GradingAssistantPage } from './pages/GradingAssistant';
+import { AboutPage, FaqPage, ContactPage } from './pages/Static';
+import { LanguageProvider } from './contexts/LanguageContext';
+
+const AppContent: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState('home');
+
+  const navigate = (page: string) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'home': return <GeneratorPage />;
+      case 'grading': return <GradingAssistantPage />;
+      case 'about': return <AboutPage />;
+      case 'faq': return <FaqPage />;
+      case 'contact': return <ContactPage />;
+      case 'privacy': return (
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+          <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
+          <p className="text-gray-600">Privacy info...</p>
+        </div>
+      );
+      case 'terms': return (
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+           <h1 className="text-3xl font-bold mb-4">Terms & Conditions</h1>
+           <p className="text-gray-600">Terms info...</p>
+        </div>
+      );
+      default: return <GeneratorPage />;
+    }
+  };
+
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        maxWidth: '960px',
-        margin: '0 auto',
-        padding: '2rem 1.5rem',
-      }}
-    >
-      <header style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-          De Toetsenmaker
-        </h1>
-        <p style={{ maxWidth: '48rem', lineHeight: 1.5 }}>
-          Dit is een testversie van <strong>De Toetsenmaker</strong>. 
-          De echte AI-logica komt later, maar deze pagina bewijst dat de app
-          technisch goed draait op GitHub &amp; Vercel.
-        </p>
-      </header>
+    <div className="min-h-screen flex flex-col bg-[#F5F7FA] dark:bg-dark-bg transition-colors duration-300 relative">
+      <Navbar onNavigate={navigate} currentPage={currentPage} />
+      
+      <main className="flex-grow pt-8 pb-12 relative">
+        {renderPage()}
+      </main>
 
-      <section
-        style={{
-          background: '#ffffff',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          boxShadow: '0 1px 3px rgba(15,23,42,0.08)',
-          border: '1px solid #e5e7eb',
-        }}
-      >
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem' }}>
-          Demo-scherm
-        </h2>
-        <p style={{ marginBottom: '0.75rem', lineHeight: 1.5 }}>
-          Hier komt straks de interface waarin je:
-        </p>
-        <ul style={{ marginLeft: '1.25rem', marginBottom: '1rem', lineHeight: 1.5 }}>
-          <li>toetsvragen laat genereren op Basis- of Blooms-niveau,</li>
-          <li>feedback en modelantwoorden ziet,</li>
-          <li>vragen kunt bijschaven en exporteren.</li>
-        </ul>
-        <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>
-          Als je deze tekst nu in je browser ziet, dan werkt de app. 🎉
-        </p>
-      </section>
-    </main>
+      <footer className="bg-white dark:bg-dark-surface border-t border-gray-200 dark:border-white/5 py-12 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium">
+            &copy; {new Date().getFullYear()} Radboud Universiteit / Medimind B.V.
+          </p>
+          <div className="flex justify-center space-x-6 text-sm text-gray-500">
+            <button onClick={() => navigate('privacy')} className="hover:text-primary transition-colors">Privacy</button>
+            <button onClick={() => navigate('terms')} className="hover:text-primary transition-colors">Terms</button>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
-}
+};
 
-export default App;
+const App: React.FC = () => {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
+  );
+};
+
+export default App>
