@@ -50,3 +50,19 @@ function App() {
       <AppProvider>
         <QuestionProvider>
           <div className="flex min-h-screen bg-gray-50">
+            <Sidebar
+              current={page}
+              onNavigate={(p: any) => setPage(p)}
+            />
+
+            <main className="flex-1 p-6">
+              {renderPage()}
+            </main>
+          </div>
+        </QuestionProvider>
+      </AppProvider>
+    </SettingsProvider>
+  );
+}
+
+export default App;
